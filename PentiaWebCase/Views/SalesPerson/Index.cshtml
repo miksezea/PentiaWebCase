@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PentiaWebCase.Models.SalesPerson>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Salespeople</h2>
+
+    <table class="table">
+        <tr>
+            <th>
+                Name of salesperson
+            </th>
+            <th>
+                Amount of orders
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => person.Name)
+                </td>
+                @if (person.Orderlines != null)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => person.Orderlines.Count)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Orders not accessible
+                    </td>
+                }
+                <td>
+                    @Html.ActionLink("More info", "Details", new { id = person.Id })
+                </td>
+            </tr>
+        }
+    </table>
+</div>

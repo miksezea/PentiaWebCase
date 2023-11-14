@@ -1,0 +1,63 @@
+﻿@model List<PentiaWebCase.Models.MonthlyOrders>
+@{
+    ViewBag.Title = "Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h1>Amount of orders each month</h1>
+
+@foreach (var yearGroup in Model.GroupBy(m => m.Year).OrderByDescending(g => g.Key))
+{
+    <div>
+        <h2>@yearGroup.Key</h2>
+        <canvas id="chart-@yearGroup.Key"></canvas>
+        <br />
+    </div>
+
+    <script>
+        var monthOrder = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        var orderedData = @Html.Raw(Json.Serialize(yearGroup));
+
+        monthOrder.forEach(month => {
+            var existingMonth = orderedData.find(m => m.month === month);
+            if (!existingMonth) {
+                orderedData.push({ month: month, orderCount: 0 });
+            }
+        });
+
+        orderedData.forEach(m => {
+            m.MonthOrder = monthOrder.indexOf(m.month);
+            m.Month = m.month;
+        });
+
+        orderedData.sort((a, b) => a.MonthOrder - b.MonthOrder);
+
+        var labels = orderedData.map(m => m.Month);
+        var data = orderedData.map(m => m.orderCount);
+
+        var ctx = document.getElementById("chart-@yearGroup.Key").getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Orders',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

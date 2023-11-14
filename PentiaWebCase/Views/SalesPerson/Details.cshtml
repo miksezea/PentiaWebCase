@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Salesperson Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Salesperson details</h2>
+    <div>
+        Id: @Model.Id, Name: @Model.Name <br />
+        Hired: @Model.HireDate <br />
+        Address: @Model.Address, @Model.ZipCode @Model.City
+    </div>
+    
+    <h3>Orders</h3>
+    @if (Model.Orderlines != null)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Date ordered
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var orderline in Model.Orderlines)
+            {
+                <tr>
+                    <td>
+                        @orderline.Id
+                    </td>
+                    <td>
+                        @orderline.OrderName
+                    </td>
+                    <td>
+                        @orderline.OrderPrice
+                    </td>
+                    <td>
+                        @orderline.OrderDate
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div>No orders found</div>
+    }    
+</div>
